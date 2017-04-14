@@ -98,7 +98,6 @@ Latitude: <input name="lat" type="text" size=8 value="38.9072"/> Longitude: <inp
 <div id="footer"></div>
 </div>
 <script>
-
 var death, devastation, shockwave, deafness, shatter, mushroom;
 var death_rad = 914.4, devastation_rad = 1609.34, shockwave_rad = 1.7*1609.34,
     deafness_rad = 2*1609.34, shatter_rad = 5*1609.34, mushroom_rad = 30*1609.34;
@@ -107,6 +106,16 @@ var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data Â© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});    
 var lat_lng = [38.9072, -77.0369];
+
+function resetMapView(lat, lng) {
+  map.setView(new L.LatLng(lat, lng), 9);
+  death.setLatLng([lat, lng]);
+  devastation.setLatLng([lat, lng]);
+  shockwave.setLatLng([lat, lng]);
+  deafness.setLatLng([lat, lng]);
+  shatter.setLatLng([lat, lng]);
+  mushroom.setLatLng([lat, lng]);
+}
 
 $(document).ready(function() {
 
@@ -143,13 +152,7 @@ $(document).ready(function() {
 $('form').on('submit', function(e) {
     e.preventDefault();
     var lat = $("input[name=lat]").val(), lng = $("input[name=lng]").val();
-    map.setView(new L.LatLng(lat, lng), 9);
-    death.setLatLng([lat, lng]);
-    devastation.setLatLng([lat, lng]);
-    shockwave.setLatLng([lat, lng]);
-    deafness.setLatLng([lat, lng]);
-    shatter.setLatLng([lat, lng]);
-    mushroom.setLatLng([lat, lng]);
+    resetMapView(lat, lng);
 });
 </script>
 <script>
@@ -164,13 +167,7 @@ function initmap() {
     $("input[name=lat]").val(lat);
     $("input[name=lng]").val(lng);
 
-    map.setView(new L.LatLng(lat, lng), 9);
-    death.setLatLng([lat, lng]);
-    devastation.setLatLng([lat, lng]);
-    shockwave.setLatLng([lat, lng]);
-    deafness.setLatLng([lat, lng]);
-    shatter.setLatLng([lat, lng]);
-    mushroom.setLatLng([lat, lng]);
+    resetMapView(lat, lng);
 
   }, "jsonp");
 
