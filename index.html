@@ -89,7 +89,7 @@ p {
 </div>
 </div>
 <form style="padding-top:1em; padding-bottom:0">
-Latitude: <input name="lat" type="text" size=8 value="38.9072"/> Longitude: <input name="lng" type="text" size=8 value="-77.0369"/> <input type="submit" name="submit" value="Update"/>
+Location: <input name="loc" type="text" size="60" /> <input type="submit" name="submit" value="Update"/>
 </form>
 </div>
 <div id="content">
@@ -142,27 +142,32 @@ $(document).ready(function() {
 
 $('form').on('submit', function(e) {
     e.preventDefault();
-    var lat = $("input[name=lat]").val(), lng = $("input[name=lng]").val();
-    map.setView(new L.LatLng(lat, lng), 9);
-    death.setLatLng([lat, lng]);
-    devastation.setLatLng([lat, lng]);
-    shockwave.setLatLng([lat, lng]);
-    deafness.setLatLng([lat, lng]);
-    shatter.setLatLng([lat, lng]);
-    mushroom.setLatLng([lat, lng]);
+    var location = $("input[name=loc]").val();
+    $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyDcmcyrzfDlPkQ23HEWy-QdQ7jGBjKzZf4`, 
+      function(response) {
+        var lat = response.results[0].geometry.location.lat;
+        var lng = response.results[0].geometry.location.lng;
+        map.setView(new L.LatLng(lat, lng), 9);
+        death.setLatLng([lat, lng]);
+        devastation.setLatLng([lat, lng]);
+        shockwave.setLatLng([lat, lng]);
+        deafness.setLatLng([lat, lng]);
+        shatter.setLatLng([lat, lng]);
+        mushroom.setLatLng([lat, lng]);
+      }
+    );
 });
 </script>
 <script>
 function initmap() {
 
-  $.getJSON("https://ipinfo.io/json", function(response) {
+  $.getJSON("http://ipinfo.io/json", function(response) {
 
     lat_lng = response.loc.split(",");
 
     var lat = lat_lng[0], lng = lat_lng[1];
 
-    $("input[name=lat]").val(lat);
-    $("input[name=lng]").val(lng);
+    $("input[name=loc]").val(`${response.city}, ${response.region}, ${response.country}`);
 
     map.setView(new L.LatLng(lat, lng), 9);
     death.setLatLng([lat, lng]);
