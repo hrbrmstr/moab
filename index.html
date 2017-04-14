@@ -1,0 +1,183 @@
+
+<head>
+<title>MOAB Devastation Simulator</title>
+<meta property="og:type" content="article">
+<meta property="og:title" content="MOAB Devastation Simulator">
+<meta property="og:site_name" content="rud.is">
+<meta property="og:url" content="https://rud.is/moab/index.html">
+<meta property="og:image" content="https://rud.is/moab/moab.png">
+<meta property="article:published_time" content="2017-04-13">
+<meta property="article:author" content="Bob Rudis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@hrbrmstr">
+<meta name="twitter:title" content="MOAB Devastation Simulator">
+<meta name="twitter:description" content="Simulates varying degrees of a MOAB blast radius on any lat/lng pair.">
+<link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>L_PREFER_CANVAS = true;</script>
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<style>
+html, body, div, p, h1, h2, h3 {
+  font-family: 'Cabin', sans-serif;
+}
+html, body {
+  height: 100%;
+  padding: 0;
+}
+body {
+  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+  display: -ms-flexbox;  /* TWEENER - IE 10 */
+  display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  flex-flow: column wrap;
+  margin-left:4em;
+  margin-right:4em;
+  width: auto;
+}
+p {
+  font-size: 1.0em;
+}
+#wrapper {
+  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+  display: -ms-flexbox;  /* TWEENER - IE 10 */
+  display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  min-height: 100%;
+  flex-direction: column;
+}
+#footer {
+  height:1em;
+}
+#content {
+  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+  display: -ms-flexbox;  /* TWEENER - IE 10 */
+  display: -webkit-flex; /* NEW - Safari 6.1+.  iOS 7.1+, BB10 */
+  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  -webkit-flex: 1 1 ;-ms-flex: 1 1 ;flex: 1 1 ;
+  order: 2;
+}
+#map {
+  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+  display: -ms-flexbox;  /* TWEENER - IE 10 */
+  display: -webkit-flex; /* NEW - Safari 6.1+.iOS 7.1+, BB10 */
+  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  -webkit-flex: 1 ;-ms-flex: 1 ;flex: 1 ;
+  min-height: 300px;
+}
+</style>
+<script>
+</script>
+</head>
+<body>
+<div id="wrapper">
+<div id="blather">
+<div id="accord">
+<h2>MOAB Devastation Simulator</h2>
+<div>
+<p>This was created on Thursday, April 13, 2017. The United States dropped a <a href="http://www.express.co.uk/news/world/791686/US-bomb-MOAB-non-nuclear-Massive-Ordnance-Air-Blast-Bomb-what-is">MOAB</a>, ostensibly on an ISIS camp in Afghanistan.</p>
+<p>The bomb hit in a part of the world that is foreign to most people; especially most people in the West.</p>
+<p>News reports talked about the "largest non-nuclear bomb" and a "1-mile blast radius" but it still happened in some foreign, removed, remote location that has no connection to everyday life.</p>
+<p>We <i>say</i> we did recon to ensure no innocents or allies were in the zone, but this is a devastating bomb and it has many zones of destruction.</p>
+<p>This small app shows you what the area of devastation would be in your backyard. That's important, since this blast happened in someone else's backyard. And, my faith in the U.S. Military Industrial Complex to prevent innocent loss of life is non-existent anymore.</p>
+<p>The page likely automatically geo-located you from your IP address (if it did not, it picked another starting location). If it did, that process if fraught with error, so feel free to adjust it with your own (or any) latitude and longitude to see how much of your own backyard would have been gone if an international aggressor had decided to take unilateral action against us by hitting your town.</p>
+</div>
+</div>
+<form style="padding-top:1em; padding-bottom:0">
+Latitude: <input name="lat" type="text" size=8 value="38.9072"/> Longitude: <input name="lng" type="text" size=8 value="-77.0369"/> <input type="submit" name="submit" value="Update"/>
+</form>
+</div>
+<div id="content">
+  <div id="map"></div>
+</div>
+<div id="footer"></div>
+</div>
+<script>
+
+var death, devastation, shockwave, deafness, shatter, mushroom;
+var death_rad = 914.4, devastation_rad = 1609.34, shockwave_rad = 1.7*1609.34,
+    deafness_rad = 2*1609.34, shatter_rad = 5*1609.34, mushroom_rad = 30*1609.34;
+var map = new L.Map('map');
+var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+var osmAttrib='Map data Â© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});    
+var lat_lng = [38.9072, -77.0369];
+
+$(document).ready(function() {
+
+  $("#accord").accordion({ collapsible: true, heightStyle:"content" });
+  $("#accord").accordion({ activate: function( event, ui ) { setTimeout(function(){ map.invalidateSize()}, 400); } });
+
+  map.setView(new L.LatLng(lat_lng[0], lat_lng[1]), 9);
+
+  mushroom = L.circle([lat_lng[0], lat_lng[1]], { radius: mushroom_rad, fillOpacity: 0.167 }).addTo(map);
+  shatter = L.circle([lat_lng[0], lat_lng[1]], { radius: shatter_rad, fillOpacity: 0.167 }).addTo(map);
+  deafness = L.circle([lat_lng[0], lat_lng[1]], { radius: deafness_rad, fillOpacity: 0.167 }).addTo(map);
+  shockwave = L.circle([lat_lng[0], lat_lng[1]], { radius: shockwave_rad, fillOpacity: 0.167 }).addTo(map);
+  devastation = L.circle([lat_lng[0], lat_lng[1]], { radius: devastation_rad, fillOpacity: 0.167 }).addTo(map);
+  death = L.circle([lat_lng[0], lat_lng[1]], { radius: death_rad, fillOpacity: 0.167 }).addTo(map);
+
+  mushroom.bindPopup("This is 30 miles from the center of the blast<br/>You can still see the mushroom cloud from here.");
+  shatter.bindPopup("This is a blast radius of 5 miles.<br/>Glass shatters in buildings and cars.");
+  deafness.bindPopup("This is a blast radius of 2 miles.<br/>The continued shockwave causes deafness to humans and animals.");
+  shockwave.bindPopup("This is a blast radius of 1.7 miles.<br/>The blast shockwave continues to cause widespread devastation.");
+  devastation.bindPopup("This is a blast radius of 1 mile.<br/>Massive devastation to property, humans, plant and animal life.");
+  death.bindPopup("This is a blast radius of ~900m.<br/>Everything in this area is obliterated.");
+
+  mushroom.bringToFront();
+  shatter.bringToFront();
+  deafness.bringToFront();
+  shockwave.bringToFront();
+  devastation.bringToFront();
+  death.bringToFront();
+
+  map.addLayer(osm);
+
+});
+
+$('form').on('submit', function(e) {
+    e.preventDefault();
+    var lat = $("input[name=lat]").val(), lng = $("input[name=lng]").val();
+    map.setView(new L.LatLng(lat, lng), 9);
+    death.setLatLng([lat, lng]);
+    devastation.setLatLng([lat, lng]);
+    shockwave.setLatLng([lat, lng]);
+    deafness.setLatLng([lat, lng]);
+    shatter.setLatLng([lat, lng]);
+    mushroom.setLatLng([lat, lng]);
+});
+</script>
+<script>
+function initmap() {
+
+  $.getJSON("https://ipinfo.io/json", function(response) {
+
+    lat_lng = response.loc.split(",");
+
+    var lat = lat_lng[0], lng = lat_lng[1];
+
+    $("input[name=lat]").val(lat);
+    $("input[name=lng]").val(lng);
+
+    map.setView(new L.LatLng(lat, lng), 9);
+    death.setLatLng([lat, lng]);
+    devastation.setLatLng([lat, lng]);
+    shockwave.setLatLng([lat, lng]);
+    deafness.setLatLng([lat, lng]);
+    shatter.setLatLng([lat, lng]);
+    mushroom.setLatLng([lat, lng]);
+
+  }, "jsonp");
+
+}
+initmap();
+
+setTimeout(function(){ map.invalidateSize()}, 400);
+</script>
+</body>
+</html>
