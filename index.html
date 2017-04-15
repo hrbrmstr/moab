@@ -1,6 +1,7 @@
 
 <head>
 <title>MOAB Devastation Simulator</title>
+
 <meta property="og:type" content="article">
 <meta property="og:title" content="MOAB Devastation Simulator">
 <meta property="og:site_name" content="rud.is">
@@ -8,20 +9,40 @@
 <meta property="og:image" content="https://rud.is/moab/moab.png">
 <meta property="article:published_time" content="2017-04-13">
 <meta property="article:author" content="Bob Rudis">
+
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@hrbrmstr">
 <meta name="twitter:title" content="MOAB Devastation Simulator">
 <meta name="twitter:description" content="Simulates varying degrees of a MOAB blast radius on any lat/lng pair.">
+
 <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" 
+      integrity="sha256-bOWY8F32FGGbNDMPAnwWl/Lv9CKen4IQsNZ4RU9rcs0=" 
+      crossorigin="anonymous" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" 
+      integrity="sha256-p6xU9YulB7E2Ic62/PX+h59ayb3PBJ0WFTEQxq0EjHw=" 
+      crossorigin="anonymous" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" 
+      integrity="sha256-AjyoyaRtnGVTywKH/Isxxu5PXI0s4CcE0BzPAX83Ppc=" 
+      crossorigin="anonymous" />
+
 <script>L_PREFER_CANVAS = true;</script>
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-<script
-  src="https://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js" 
+        integrity="sha256-GXUdrV9FHGDyzoSGD3O+jR3eYZaZZsjbsMvFhK3C0qg=" 
+        crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" 
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" 
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" 
+        integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" 
+        crossorigin="anonymous"></script>
+
 <style>
 html, body, div, p, h1, h2, h3 {
   font-family: 'Cabin', sans-serif;
@@ -31,10 +52,10 @@ html, body {
   padding: 0;
 }
 body {
-  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
-  display: -ms-flexbox;  /* TWEENER - IE 10 */
-  display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
-  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  display: -webkit-box;   
+  display: -ms-flexbox;  
+  display: -webkit-flex;
+  display: flex;         
   flex-flow: column wrap;
   margin-left:4em;
   margin-right:4em;
@@ -44,36 +65,34 @@ p {
   font-size: 1.0em;
 }
 #wrapper {
-  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
-  display: -ms-flexbox;  /* TWEENER - IE 10 */
-  display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
-  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  display: -webkit-box; 
+  display: -ms-flexbox;  
+  display: -webkit-flex; 
+  display: flex;         
   min-height: 100%;
   flex-direction: column;
 }
-#footer {
-  height:1em;
-}
 #content {
-  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
-  display: -ms-flexbox;  /* TWEENER - IE 10 */
-  display: -webkit-flex; /* NEW - Safari 6.1+.  iOS 7.1+, BB10 */
-  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  display: -webkit-box;  
+  display: -ms-flexbox;  
+  display: -webkit-flex; 
+  display: flex;         
   -webkit-flex: 1 1 ;-ms-flex: 1 1 ;flex: 1 1 ;
   order: 2;
+  padding-bottom:0.5em;
 }
 #map {
-  display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
-  display: -ms-flexbox;  /* TWEENER - IE 10 */
-  display: -webkit-flex; /* NEW - Safari 6.1+.iOS 7.1+, BB10 */
-  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  display: -webkit-box;  
+  display: -ms-flexbox;  
+  display: -webkit-flex; 
+  display: flex;         
   -webkit-flex: 1 ;-ms-flex: 1 ;flex: 1 ;
   min-height: 300px;
 }
 </style>
-<script>
-</script>
+
 </head>
+
 <body>
 <div id="wrapper">
 <div id="blather">
@@ -95,8 +114,6 @@ Location: <input name="loc" type="text" size="60" /> <input type="submit" name="
 <div id="content">
   <div id="map"></div>
 </div>
-<div id="footer"></div>
-</div>
 <script>
 var death, devastation, shockwave, deafness, shatter, mushroom;
 var death_rad = 914.4, devastation_rad = 1609.34, shockwave_rad = 1.7*1609.34,
@@ -105,7 +122,7 @@ var map = new L.Map('map');
 var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data Â© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});    
-var lat_lng = [38.9072, -77.0369];
+var lat_lng = [26.6771, -80.0370]; // default start point if geoloc fails/is blocked
 
 function resetMapView(lat, lng) {
   map.setView(new L.LatLng(lat, lng), 9);
@@ -119,17 +136,20 @@ function resetMapView(lat, lng) {
 
 $(document).ready(function() {
 
-  $("#accord").accordion({ collapsible: true, heightStyle:"content" });
-  $("#accord").accordion({ activate: function( event, ui ) { setTimeout(function(){ map.invalidateSize()}, 400); } });
+  $("#accord").accordion({ 
+    collapsible: true, 
+    heightStyle: "content",
+    activate: function( event, ui ) { setTimeout(function(){ map.invalidateSize()}, 400); }
+  });
 
   map.setView(new L.LatLng(lat_lng[0], lat_lng[1]), 9);
 
-  mushroom = L.circle([lat_lng[0], lat_lng[1]], { radius: mushroom_rad, fillOpacity: 0.167 }).addTo(map);
-  shatter = L.circle([lat_lng[0], lat_lng[1]], { radius: shatter_rad, fillOpacity: 0.167 }).addTo(map);
-  deafness = L.circle([lat_lng[0], lat_lng[1]], { radius: deafness_rad, fillOpacity: 0.167 }).addTo(map);
-  shockwave = L.circle([lat_lng[0], lat_lng[1]], { radius: shockwave_rad, fillOpacity: 0.167 }).addTo(map);
-  devastation = L.circle([lat_lng[0], lat_lng[1]], { radius: devastation_rad, fillOpacity: 0.167 }).addTo(map);
-  death = L.circle([lat_lng[0], lat_lng[1]], { radius: death_rad, fillOpacity: 0.167 }).addTo(map);
+  mushroom = L.circle([lat_lng[0], lat_lng[1]], { radius: mushroom_rad, fillColor: '#e6f598', color: '#e6f598', fillOpacity: 0.4 }).addTo(map);
+  shatter = L.circle([lat_lng[0], lat_lng[1]], { radius: shatter_rad, fillColor: '#ffffbf', color: '#ffffbf', fillOpacity: 0.4 }).addTo(map);
+  deafness = L.circle([lat_lng[0], lat_lng[1]], { radius: deafness_rad, fillColor: '#fee08b', color: '#fee08b', fillOpacity: 0.4 }).addTo(map);
+  shockwave = L.circle([lat_lng[0], lat_lng[1]], { radius: shockwave_rad, fillColor: '#fdae61', color: '#fdae61', fillOpacity: 0.4 }).addTo(map);
+  devastation = L.circle([lat_lng[0], lat_lng[1]], { radius: devastation_rad, fillColor: '#f46d43', color: '#f46d43', fillOpacity: 0.4 }).addTo(map);
+  death = L.circle([lat_lng[0], lat_lng[1]], { radius: death_rad, fillColor: '#d53e4f', color: '#d53e4f', fillOpacity: 0.4 }).addTo(map);
 
   mushroom.bindPopup("This is 30 miles from the center of the blast<br/>You can still see the mushroom cloud from here.");
   shatter.bindPopup("This is a blast radius of 5 miles.<br/>Glass shatters in buildings and cars.");
@@ -182,4 +202,5 @@ initmap();
 setTimeout(function(){ map.invalidateSize()}, 400);
 </script>
 </body>
+
 </html>
